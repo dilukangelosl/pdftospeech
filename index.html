@@ -6,114 +6,27 @@
 
 <body style="padding: 15px;">
 
+<div style="width: 700px;height: 500px;display: block; margin: 0 auto;  background: #ecf0f1;border-radius:10px ;padding:15px;">
 
+    <div class="spinner-container">
+        <svg class="spinner" width="65px" height="65px" viewBox="0 0 66 66" xmlns="http://www.w3.org/2000/svg">
+            <circle class="path" fill="none" stroke-width="6" stroke-linecap="round" cx="33" cy="33" r="30"></circle>
+        </svg>
+        <p id="message">Please wait</p>
+    </div>
+
+    <div style="width: 100%;">
+        <p id="text"></p>
+    </div>
+
+    <button class="btn" id="play">PLAY</button>
+
+
+</div>
 
 <div>
-    <svg class="waveform" xmlns="http://www.w3.org/2000/svg" viewBox="0 -2 64 34" preserveAspectRatio="none" >
 
-        <path class="blue">
-            <animate
-                    class="animate"
-                    attributeName="d"
-                    values="
-        M0 16
-        C0 16 0 16 0 16
-        C0 16 0 16 0 16
-        C6 16 8 8 16 8
-        C24 8 24 32 32 32
-        C40 32 40 8 48 8
-        C56 8 58 16 64 16
-        ;
-        M0 16
-        C0 16 0 16 0 16
-        C6 16 8 24 16 24
-        C24 24 24 0 32 0
-        C40 0 40 24 48 24
-        C56 24 58 16 64 16
-        C64 16 64 16 64 16
-        ;
-        M0 16
-        C6 16 8 8 16 8
-        C24 8 24 32 32 32
-        C40 32 40 8 48 8
-        C56 8 58 16 64 16
-        C64 16 64 16 64 16
-        C64 16 64 16 64 16
-        "
-                    dur="2s"
-                    repeatCount="indefinite" />
-        </path>
 
-        <path class="red">
-            <animate
-                    class="animate"
-                    attributeName="d"
-                    values="
-        M0 16
-        C6 16 8 8 16 8
-        C24 8 24 32 32 32
-        C40 32 40 8 48 8
-        C56 8 58 16 64 16
-        C64 16 64 16 64 16
-        C64 16 64 16 64 16
-        ;
-        M0 16
-        C0 16 0 16 0 16
-        C6 16 8 24 16 24
-        C24 24 24 0 32 0
-        C40 0 40 24 48 24
-        C56 24 58 16 64 16
-        C64 16 64 16 64 16
-        ;
-        M0 16
-        C0 16 0 16 0 16
-        C0 16 0 16 0 16
-        C6 16 8 8 16 8
-        C24 8 24 32 32 32
-        C40 32 40 8 48 8
-        C56 8 58 16 64 16
-        "
-                    dur="3s"
-                    repeatCount="indefinite" />
-        </path>
-
-        <path class="green">
-            <animate
-                    class="animate"
-                    attributeName="d"
-                    values="
-        M0 16
-        C0 16 0 16 0 16
-        C0 16 0 16 0 16
-        C6 16 8 8 16 8
-        C24 8 24 32 32 32
-        C40 32 40 8 48 8
-        C56 8 58 16 64 16
-        ;
-        M0 16
-        C0 16 0 16 0 16
-        C6 16 8 24 16 24
-        C24 24 24 0 32 0
-        C40 0 40 24 48 24
-        C56 24 58 16 64 16
-        C64 16 64 16 64 16
-        ;
-        M0 16
-        C6 16 8 8 16 8
-        C24 8 24 32 32 32
-        C40 32 40 8 48 8
-        C56 8 58 16 64 16
-        C64 16 64 16 64 16
-        C64 16 64 16 64 16
-        "
-                    dur="8s"
-                    repeatCount="indefinite" />
-        </path>
-
-    </svg>
-    <div class="absolute center table">
-        <h1 class="h1 table-cell" id="message"></h1>
-    </div>
 </div>
 
 <script   src="https://code.jquery.com/jquery-2.2.4.min.js"   integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="   crossorigin="anonymous"></script>
@@ -130,7 +43,8 @@
 <script>
 
 
-    var pdfLocation = "sample.pdf";
+    var pdfLocation = "sample3.pdf";
+    var tex = "";
 
     //pd
 
@@ -163,7 +77,7 @@
 
 
 
-    $("#message").text("Checking PDF.. Please wait..").fadeIn();
+    $("#message").text("Converting PDF.. Please wait...").fadeIn();
 
 
     //run the function to convert text to speech
@@ -189,25 +103,46 @@
 
     gettext(pdfLocation).then(function (text) {
 
+        console.log(pdfLocation)
+        $("#text").text(text);
+        $("#message").text("PDF Loaded").fadeIn();
+        tex = text;
 
-        console.log(text);
-        $("#message").text("Reading the PDF").fadeIn();
-
-        speechRs.speechinit('Google UK English Female',function(e){
-
-            speechRs.speak(text, function() {
-                //speaking completed.
-                $("#message").text("Thank you ").fadeIn();
-            }, false);
-        });
-
-
-
-
+        $('.spinner-container').hide();
 
     }, function (reason) {
         console.error(reason);
     });
+
+
+    $("#play").click(function () {
+        $('.spinner-container').show();
+        console.log("click");
+
+        if(tex == "") {
+            alert("PDF Not Loaded");
+        }
+        else{
+
+            $("#message").text("Reading PDF....").fadeIn();
+            speechRs.speechinit('Google UK English Female',function(e){
+
+                speechRs.speak(tex, function() {
+                    //speaking completed.
+                    $('.spinner-container').hide();
+                    $("#message").text("Thank you ").fadeIn();
+                }, false);
+            });
+        }
+
+
+    })
+
+    $("#stop").click(function () {
+
+    })
+
+
 
 </script>
 </body>
