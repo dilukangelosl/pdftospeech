@@ -1,0 +1,67 @@
+body {
+    color: rgba(208, 221, 238, 0.75);
+    background-color: #333940;
+}
+
+@keyframes glow {
+    from {
+        opacity: .2;
+    }
+    to {
+        opacity: 1;
+    }
+}
+.waveform {
+    fill: none;
+    stroke-width: .125;
+}
+
+.blue {
+    stroke: rgba(0, 204, 255, 0.8);
+}
+
+.red {
+    stroke: rgba(255, 68, 0, 0.8);
+}
+
+.green {
+    stroke: rgba(0, 255, 102, 0.8);
+}
+
+.absolute {
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+}
+
+.center {
+    text-align: center;
+}
+
+.h1 {
+    font-size: 4rem;
+    font-weight: 200;
+    letter-spacing: .3em;
+}
+
+html, body {
+    height: 100%;
+}
+
+.table {
+    display: table;
+    width: 100%;
+    height: 100%;
+}
+
+.table-cell {
+    display: table-cell;
+    vertical-align: middle;
+}
+
+
+#message {
+
+    transition: all 1s ease;
+}

@@ -1,0 +1,214 @@
+<html>
+<head>
+    <title>PDF to Speech</title>
+    <link rel="stylesheet" href="style.css" />
+</head>
+
+<body style="padding: 15px;">
+
+
+
+<div>
+    <svg class="waveform" xmlns="http://www.w3.org/2000/svg" viewBox="0 -2 64 34" preserveAspectRatio="none" >
+
+        <path class="blue">
+            <animate
+                    class="animate"
+                    attributeName="d"
+                    values="
+        M0 16
+        C0 16 0 16 0 16
+        C0 16 0 16 0 16
+        C6 16 8 8 16 8
+        C24 8 24 32 32 32
+        C40 32 40 8 48 8
+        C56 8 58 16 64 16
+        ;
+        M0 16
+        C0 16 0 16 0 16
+        C6 16 8 24 16 24
+        C24 24 24 0 32 0
+        C40 0 40 24 48 24
+        C56 24 58 16 64 16
+        C64 16 64 16 64 16
+        ;
+        M0 16
+        C6 16 8 8 16 8
+        C24 8 24 32 32 32
+        C40 32 40 8 48 8
+        C56 8 58 16 64 16
+        C64 16 64 16 64 16
+        C64 16 64 16 64 16
+        "
+                    dur="2s"
+                    repeatCount="indefinite" />
+        </path>
+
+        <path class="red">
+            <animate
+                    class="animate"
+                    attributeName="d"
+                    values="
+        M0 16
+        C6 16 8 8 16 8
+        C24 8 24 32 32 32
+        C40 32 40 8 48 8
+        C56 8 58 16 64 16
+        C64 16 64 16 64 16
+        C64 16 64 16 64 16
+        ;
+        M0 16
+        C0 16 0 16 0 16
+        C6 16 8 24 16 24
+        C24 24 24 0 32 0
+        C40 0 40 24 48 24
+        C56 24 58 16 64 16
+        C64 16 64 16 64 16
+        ;
+        M0 16
+        C0 16 0 16 0 16
+        C0 16 0 16 0 16
+        C6 16 8 8 16 8
+        C24 8 24 32 32 32
+        C40 32 40 8 48 8
+        C56 8 58 16 64 16
+        "
+                    dur="3s"
+                    repeatCount="indefinite" />
+        </path>
+
+        <path class="green">
+            <animate
+                    class="animate"
+                    attributeName="d"
+                    values="
+        M0 16
+        C0 16 0 16 0 16
+        C0 16 0 16 0 16
+        C6 16 8 8 16 8
+        C24 8 24 32 32 32
+        C40 32 40 8 48 8
+        C56 8 58 16 64 16
+        ;
+        M0 16
+        C0 16 0 16 0 16
+        C6 16 8 24 16 24
+        C24 24 24 0 32 0
+        C40 0 40 24 48 24
+        C56 24 58 16 64 16
+        C64 16 64 16 64 16
+        ;
+        M0 16
+        C6 16 8 8 16 8
+        C24 8 24 32 32 32
+        C40 32 40 8 48 8
+        C56 8 58 16 64 16
+        C64 16 64 16 64 16
+        C64 16 64 16 64 16
+        "
+                    dur="8s"
+                    repeatCount="indefinite" />
+        </path>
+
+    </svg>
+    <div class="absolute center table">
+        <h1 class="h1 table-cell" id="message"></h1>
+    </div>
+</div>
+
+<script   src="https://code.jquery.com/jquery-2.2.4.min.js"   integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="   crossorigin="anonymous"></script>
+<script src="https://npmcdn.com/pdfjs-dist/build/pdf.js"></script>
+<script src="rs.speech.js/rs.speech.js"></script>
+
+
+
+
+
+
+
+
+<script>
+
+
+    var pdfLocation = "sample.pdf";
+
+    //pd
+
+    function gettext(pdfUrl){
+        var pdf = PDFJS.getDocument(pdfUrl);
+        return pdf.then(function(pdf) { // get all pages text
+            var maxPages = pdf.pdfInfo.numPages;
+            var countPromises = []; // collecting all page promises
+            for (var j = 1; j <= maxPages; j++) {
+                var page = pdf.getPage(j);
+
+                var txt = "";
+                countPromises.push(page.then(function(page) { // add page promise
+                    var textContent = page.getTextContent();
+                    return textContent.then(function(text){ // return content promise
+                        return text.items.map(function (s) { return s.str; }).join(''); // value page text
+
+                    });
+                }));
+            }
+            // Wait for all pages and join text
+            return Promise.all(countPromises).then(function (texts) {
+
+                return texts.join('');
+            });
+        });
+    }
+
+
+
+
+
+    $("#message").text("Checking PDF.. Please wait..").fadeIn();
+
+
+    //run the function to convert text to speech
+
+
+    /*
+
+
+            SPEECH STYLES
+
+
+     Google US English
+     Google UK English Female
+     Google UK English Male
+
+
+     Lib Git
+
+     https://github.com/Manohar-Gunturu/rs.speech.js
+
+
+     */
+
+    gettext(pdfLocation).then(function (text) {
+
+
+        console.log(text);
+        $("#message").text("Reading the PDF").fadeIn();
+
+        speechRs.speechinit('Google UK English Female',function(e){
+
+            speechRs.speak(text, function() {
+                //speaking completed.
+                $("#message").text("Thank you ").fadeIn();
+            }, false);
+        });
+
+
+
+
+
+    }, function (reason) {
+        console.error(reason);
+    });
+
+</script>
+</body>
+</html>
